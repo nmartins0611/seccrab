@@ -10,6 +10,7 @@
   vars_files:
     - "{{ slug }}_vars.yml"
     - "vault_{{ slug }}_vars.yml"
+    - rhsm_creds
 
   tasks:
     - name: Install RHEL packages
