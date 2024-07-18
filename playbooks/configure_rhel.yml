@@ -80,22 +80,22 @@
     #       register: __rhc_async_result_item
     #       when: __rhc_async_item.ansible_job_id is defined
 
-    - name: Configure Insights
-      tags:
-        - insights
-      when:
-        - ansible_os_family == 'RedHat'
-      block:
-        - name: Install and configure Insights client
-          vars:
-            redhat_portal_username: "{{ rhsm_username }}"
-            redhat_portal_password: "{{ rhsm_password }}"
-            insights_tags:
-              env: dev
-              demo: "{{ slug }}"
-            autoconfig: false
-          ansible.builtin.include_role:
-            name: redhatinsights.insights.insights_client
+    # - name: Configure Insights
+    #   tags:
+    #     - insights
+    #   when:
+    #     - ansible_os_family == 'RedHat'
+    #   block:
+    #     - name: Install and configure Insights client
+    #       vars:
+    #         redhat_portal_username: "{{ rhsm_username }}"
+    #         redhat_portal_password: "{{ rhsm_password }}"
+    #         insights_tags:
+    #           env: dev
+    #           demo: "{{ slug }}"
+    #         autoconfig: false
+    #       ansible.builtin.include_role:
+    #         name: redhatinsights.insights.insights_client
 
         - name: Perform initial Insights upload
           ansible.builtin.command: >
