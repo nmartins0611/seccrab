@@ -56,45 +56,45 @@
             regexp: '^manage_repos'
             line: 'manage_repos = 1'
 
-    - name: Subscribe RHEL instances
-      tags:
-        - subscribe
-      when:
-        - ansible_distribution == "RedHat"
-      block:
-        - name: Connect with RHC
-          ansible.builtin.command: |
-            /bin/rhc connect --organization "{{ rhsm_org_id }}" --activation-key "{{ rhsm_activation_key }}"
-          async: 1000
-          poll: 0
-          register: __rhc_async_item
-          # changed_when: not __rhc_async_item.changed
+    # - name: Subscribe RHEL instances
+    #   tags:
+    #     - subscribe
+    #   when:
+    #     - ansible_distribution == "RedHat"
+    #   block:
+    #     - name: Connect with RHC
+    #       ansible.builtin.command: |
+    #         /bin/rhc connect --organization "{{ rhsm_org_id }}" --activation-key "{{ rhsm_activation_key }}"
+    #       async: 1000
+    #       poll: 0
+    #       register: __rhc_async_item
+    #       # changed_when: not __rhc_async_item.changed
 
-        - name: Connect with RHC | Async
-          ansible.builtin.async_status:
-            jid: "{{ __rhc_async_item.ansible_job_id }}"
-          retries: 60
-          delay: 1
-          until: __rhc_async_result_item.finished
-          register: __rhc_async_result_item
-          when: __rhc_async_item.ansible_job_id is defined
+    #     - name: Connect with RHC | Async
+    #       ansible.builtin.async_status:
+    #         jid: "{{ __rhc_async_item.ansible_job_id }}"
+    #       retries: 60
+    #       delay: 1
+    #       until: __rhc_async_result_item.finished
+    #       register: __rhc_async_result_item
+    #       when: __rhc_async_item.ansible_job_id is defined
 
-    - name: Configure Insights
-      tags:
-        - insights
-      when:
-        - ansible_os_family == 'RedHat'
-      block:
-        - name: Install and configure Insights client
-          vars:
-            redhat_portal_username: "{{ rhsm_username }}"
-            redhat_portal_password: "{{ rhsm_password }}"
-            insights_tags:
-              env: dev
-              demo: "{{ slug }}"
-            autoconfig: false
-          ansible.builtin.include_role:
-            name: redhatinsights.insights.insights_client
+    # - name: Configure Insights
+    #   tags:
+    #     - insights
+    #   when:
+    #     - ansible_os_family == 'RedHat'
+    #   block:
+    #     - name: Install and configure Insights client
+    #       vars:
+    #         redhat_portal_username: "{{ rhsm_username }}"
+    #         redhat_portal_password: "{{ rhsm_password }}"
+    #         insights_tags:
+    #           env: dev
+    #           demo: "{{ slug }}"
+    #         autoconfig: false
+    #       ansible.builtin.include_role:
+    #         name: redhatinsights.insights.insights_client
 
         - name: Perform initial Insights upload
           ansible.builtin.command: >
