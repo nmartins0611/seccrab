@@ -1,0 +1,25 @@
+---
+- name: Inject Openssh - CVE 
+  hosts: rhel01-vul-aap-wave.demoredhat.com
+  gather_facts: true
+  become: true
+
+  tasks:
+
+   - name: Inject SSH vulnerability - 
+     ansible.builtin.yum:
+       name: openssh-8.7p1-38.el9.x86_64
+       state: present
+       allow_downgrade: true
+
+   - name: Perform initial Insights upload
+     ansible.builtin.command: >
+      /bin/insights-client
+     register: __insights_scan
+     changed_when: __insights_scan.rc == 0
+
+   - name: Run malware scan initial config
+     ansible.builtin.command: >
+      /bin/insights-client --collector malware-detection
+     register: __malware_scan
+     changed_when: __malware_scan.rc == 0
