@@ -1,0 +1,46 @@
+---
+- name: Create Inventory of CVE hosts
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+   advisory_id: 
+   controller_username:
+   controller_password:
+   insights_username:
+   insights_password:
+
+  tasks:
+
+     - name: EDA | Insights | Retrieve related CVEs from Advisories
+       ansible.builtin.uri:
+        url: "https://console.redhat.com/api/patch/v3/advisories/{{ advisory_id }}/systems?page=1&perPage=20&sort=-last_upload&offset=0&limit=20"
+        method: GET
+        url_username: "{{ insights_username }}"
+        url_password: "{{ insights_password }}"
+        force_basic_auth: true
+        status_code: 200
+      register: cves_list
+
+     - name: Extract display names
+       ansible.builtin.set_fact:
+         display_names: "{{ cves_list.json.data | map(attribute='attributes.display_name') | list }}"
+
+     - name: display
+       debug:
+        msg: "{{ display_names }}"
+
+     - name: Create Inventory
+       awx.awx.inventory:
+        name: "CVE Hosts"
+        state: present
+        controller_username: "{{ controller_username }}"
+        controller_password: "{{ controller_password }}"
+
+     - name: Add hosts to AWX inventory
+       awx.awx.host:
+        name: "{{ item }}"
+        inventory: "CVE Hosts"
+        state: present
+       loop: "{{ display_names }}"
+       when: display_names | length > 0
