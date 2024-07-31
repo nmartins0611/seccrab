@@ -5,10 +5,9 @@
 
   vars:
    advisory_id: 
-   controller_username:
-   controller_password:
-   insights_username:
-   insights_password:
+
+  vars_files:
+   - insights
 
   tasks:
 
