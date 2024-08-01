@@ -34,6 +34,7 @@
         name: "CVE Hosts"
         organization: "Globo Financial Service"
         state: present
+        controller_host: "https://controller-aap-wave.demoredhat.com"
         controller_username: "{{ controller_username }}"
         controller_password: "{{ controller_password }}"
 
