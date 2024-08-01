@@ -31,17 +31,20 @@
 
      - name: Create Inventory
        awx.awx.inventory:
-        name: "CVE Hosts"
+        name: "Affected {{ advisory_id }} Hosts"
         organization: "Globo Financial Service"
         state: present
-        controller_host: "https://controller-aap-wave.demoredhat.com"
+        controller_host: "{{ controller_host }}"
         controller_username: "{{ controller_username }}"
         controller_password: "{{ controller_password }}"
 
      - name: Add hosts to AWX inventory
        awx.awx.host:
         name: "{{ item }}"
-        inventory: "CVE Hosts"
+        inventory: "Affected {{ advisory_id }} Hosts"
         state: present
+        controller_host: "{{ controller_host }}"
+        controller_username: "{{ controller_username }}"
+        controller_password: "{{ controller_password }}"
        loop: "{{ display_names }}"
        when: display_names | length > 0
