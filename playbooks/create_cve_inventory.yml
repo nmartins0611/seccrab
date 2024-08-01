@@ -32,6 +32,7 @@
      - name: Create Inventory
        awx.awx.inventory:
         name: "CVE Hosts"
+        organization: "Globo Financial Service"
         state: present
         controller_username: "{{ controller_username }}"
         controller_password: "{{ controller_password }}"
