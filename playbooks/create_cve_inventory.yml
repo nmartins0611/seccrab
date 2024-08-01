@@ -19,7 +19,7 @@
         url_password: "{{ insights_password }}"
         force_basic_auth: true
         status_code: 200
-      register: cves_list
+       register: cves_list
 
      - name: Extract display names
        ansible.builtin.set_fact:
