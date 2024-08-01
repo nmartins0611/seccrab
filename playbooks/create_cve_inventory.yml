@@ -7,7 +7,7 @@
    advisory_id: 
 
   vars_files:
-   - insights
+    - insights
 
   tasks:
 
