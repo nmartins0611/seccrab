@@ -1,0 +1,41 @@
+---
+- name: Send POST request to Red Hat API
+  hosts: localhost
+
+  vars:
+   patch_advisory_id: 
+   systems_list: 
+
+  vars_files:
+   - insights
+
+  tasks:
+   - name: Remediation Playbook
+     ansible.builtin.uri:
+      url: https://console.redhat.com/api/remediations/v1/playbook
+      method: POST
+      status_code:
+       - 200
+      headers:
+       Content-Type: "application/json"
+       accept: "application/json"
+       Connection: "keep-alive"
+      body: '{"issues":[{"id":"patch-advisory:RHSA-2024:4779","systems":["272a6f58-9a03-4778-8031-ee64c1c63c5a","f3f01975-be31-47bb-9683-e9a37fc34f3d"]}]}'
+      return_content: true
+      force_basic_auth: true
+      url_username: "{{ insights_username }}"
+      url_password: "{{ insights_password }}"
+     register: result_playbook
+
+   - name: Filter json
+     set_fact:
+      playbook_output: "{{ result_playbook.content }}"
+
+   - name: Save Playbook 
+     ansible.builtin.copy:
+      content: "{{ playbook_output }}"
+      dest: "remediation.yml"
+      mode: '0644'
+
+   - name: Execute the remediation
+     ansible.builtin.command: "ansible-playbook remediation.yml"
