@@ -14,7 +14,7 @@
   tasks:
 
     - name: Retrieve related CVEs from Advisories
-       ansible.builtin.uri:
+      ansible.builtin.uri:
         url: "https://console.redhat.com/api/patch/v3/advisories/{{ advisory_id }}/systems?page=1&perPage=20&sort=-last_upload&offset=0&limit=20"
         method: GET
         url_username: "{{ insights_username }}"
