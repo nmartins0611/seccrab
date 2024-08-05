@@ -94,7 +94,7 @@
       controller_username: "{{ controller_username }}"
       controller_password: "{{ controller_password }}"
       validate_certs: false
-      organization: Default
+      organization: "Globo Financial Service"
       workflow_job_template: "SC4 Remediation Workflow"
       identifier: cve-approval
       approval_node:
@@ -108,7 +108,7 @@
       controller_username: "{{ controller_username }}"
       controller_password: "{{ controller_password }}"
       validate_certs: false
-      organization: Default
+      organization: "Globo Financial Service"
       workflow_job_template: "SC4 Remediation Workflow"
       identifier: cve-remediation
       unified_job_template: "SC4 - CVE Remediation"
@@ -119,10 +119,9 @@
       controller_username: "{{ controller_username }}"
       controller_password: "{{ controller_password }}"
       validate_certs: false
-      organization: Default
+      organization: "Globo Financial Service"
       workflow_job_template: "SC4 Remediation Workflow"
       identifier: cve-reboot-approval
       success_nodes:
         - cve-remediation
 
-        
