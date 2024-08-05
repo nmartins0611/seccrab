@@ -50,7 +50,7 @@
       validate_certs: false
       job_type: "run"
       organization: "Globo Financial Service"
-      inventory: "CVE Hosts"
+      inventory: "Affected RHSA-2024:4779 Hosts"
       project: "Remediation for CVE"
       playbook: "{{ playbook_output }}"
       credentials:
