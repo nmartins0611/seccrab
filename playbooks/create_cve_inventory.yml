@@ -30,7 +30,7 @@
         msg: "{{ display_names }}"
 
      - name: Create Inventory
-       awx.awx.inventory:
+       ansible.controller.inventory:
         name: "Affected {{ advisory_id }} Hosts"
         organization: "Globo Financial Service"
         state: present
@@ -39,7 +39,7 @@
         controller_password: "{{ controller_password }}"
 
      - name: Add hosts to AWX inventory
-       awx.awx.host:
+       ansible.controller.host:
         name: "{{ item }}"
         inventory: "Affected {{ advisory_id }} Hosts"
         state: present
