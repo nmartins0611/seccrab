@@ -50,6 +50,13 @@
      ansible.builtin.set_fact:
       job_template_playbook: "{{ insights_remediation_name_reboot | lower | replace(' ', '-') | replace('.','') | regex_replace('-{2,}', '-') }}-{{ insights_remediation.json.id }}.yml"
 
+  
+   - name: Update Insights Repo
+     ansible.controller.project_update
+      project: "Infrastructure-Insights"
+      timeout: 5
+      
+  
    - name: Generate job template with the generated playbook
      ansible.controller.job_template:
       name: "Remediate CVE"
