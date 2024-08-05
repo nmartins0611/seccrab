@@ -99,7 +99,7 @@
       identifier: cve-approval
       approval_node:
         description: "Would you like to remediate affected systems?"
-        name: cve-reboot-approval
+        name: cve-approval
         timeout: 3600
 
    - name: Add remediation node for workflow
