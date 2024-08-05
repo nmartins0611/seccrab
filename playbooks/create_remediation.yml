@@ -121,7 +121,7 @@
       validate_certs: false
       organization: "Globo Financial Service"
       workflow_job_template: "SC4 Remediation Workflow"
-      identifier: cve-reboot-approval
+      identifier: cve-approval
       success_nodes:
         - cve-remediation
 
