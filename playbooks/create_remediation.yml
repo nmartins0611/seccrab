@@ -5,7 +5,7 @@
   vars:
    patch_advisory_id: 
    systems_list: 
-   insights_remediation_name_reboot: RHSA-2024:4779
+   insights_remediation_name_reboot: "CVE RHSA-20244779"
 
   vars_files:
    - insights
@@ -22,7 +22,7 @@
        Content-Type: "application/json"
        accept: "application/json"
        Connection: "keep-alive"
-      body: '{"name":"RHSA-2024:4779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["f3f01975-be31-47bb-9683-e9a37fc34f3d","272a6f58-9a03-4778-8031-ee64c1c63c5a"]}],"systems":[]},"auto_reboot":false}'
+      body: '{"name":"CVE RHSA-20244779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["f3f01975-be31-47bb-9683-e9a37fc34f3d","272a6f58-9a03-4778-8031-ee64c1c63c5a"]}],"systems":[]},"auto_reboot":false}'
       return_content: true
       force_basic_auth: true
       url_username: "{{ insights_username }}"
@@ -48,7 +48,8 @@
 
    - name: Normalize playbook name to create job template
      ansible.builtin.set_fact:
-      job_template_playbook: "{{ insights_remediation.json.id }}.yml"
+      job_template_playbook: "{{ insights_remediation_name_reboot | lower | replace(' ', '-') | replace('.','') | regex_replace('-{2,}', '-') }}-{{ _insights_remediation_id_reboot.json.id }}.yml"
+
 
   
    - name: Update Insights Repo
