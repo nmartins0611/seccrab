@@ -32,11 +32,12 @@
       playbook_output: "{{ result_playbook.content }}"
 
    - name: Create Project for CVE Remediation
-     ansible.controller.project_update:
-      project: "Remediation for CVE"
+     awx.awx.project:
+      name: "Remediation for CVE"
       organization: "Default"
       controller_username: "{{ controller_username }}"
       controller_password: "{{ controller_password }}"
+      state: present
       validate_certs: false
 
    #  - name: Generate job template with the generated playbook
