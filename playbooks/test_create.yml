@@ -31,6 +31,12 @@
      set_fact:
       playbook_output: "{{ result_playbook.content }}"
 
+
+   - name: EDA | Insights | Normalize playbook name to create job template
+     ansible.builtin.set_fact:
+      job_template_playbook: "{{ result_playbook | lower | replace(' ', '-') | replace('.','') | regex_replace('-{2,}', '-') }}-Remediate.yml"
+
+
    - name: Create Project for CVE Remediation
      ansible.controller.project:
       name: "Remediation for CVE"
@@ -52,7 +58,7 @@
       organization: "Globo Financial Service"
       inventory: "Affected RHSA-2024:4779 Hosts"
       project: "Remediation for CVE"
-      playbook: "{{ playbook_output }}"
+      playbook: "{{ job_template_playbook }}"
       credentials:
          - "SC4-Rhel"
       state: "present"
