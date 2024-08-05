@@ -53,7 +53,7 @@
        inventory: "CVE Hosts"
        project: "Remediation for CVE"
        playbook: "{{ playbook_output }}"
-        credentials:
+       credentials:
           - "SC4-Rhel"
        state: "present"
 
