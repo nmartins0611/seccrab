@@ -48,7 +48,7 @@
 
    - name: Normalize playbook name to create job template
      ansible.builtin.set_fact:
-      job_template_playbook: "{{ insights_remediation_name_reboot | lower | replace(' ', '-') | replace('.','') | regex_replace('-{2,}', '-') }}-{{ insights_remediation.json.id }}.yml"
+      job_template_playbook: "{{ insights_remediation.json.id }}.yml"
 
   
    - name: Update Insights Repo
