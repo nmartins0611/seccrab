@@ -5,17 +5,37 @@
   vars:
    patch_advisory_id: 
    systems_list: 
+   insights_remediation_name_reboot: RHSA-2024:4779
 
   vars_files:
    - insights
 
   tasks:
-   - name: Remediation Playbook
+   - name: Create Remediation Project
+     ansible.builtin.uri:
+      url: https://console.redhat.com/api/remediations/v1/remediations
+      method: POST
+      status_code:
+       - 200
+       - 201
+      headers:
+       Content-Type: "application/json"
+       accept: "application/json"
+       Connection: "keep-alive"
+      body: '{"name":"RHSA-2024:4779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["f3f01975-be31-47bb-9683-e9a37fc34f3d","272a6f58-9a03-4778-8031-ee64c1c63c5a"]}],"systems":[]},"auto_reboot":false}'
+      return_content: true
+      force_basic_auth: true
+      url_username: "{{ insights_username }}"
+      url_password: "{{ insights_password }}"
+     register: insights_remediation
+
+   - name: Create Remediation Playbook
      ansible.builtin.uri:
       url: https://console.redhat.com/api/remediations/v1/playbook
       method: POST
       status_code:
        - 200
+       - 201
       headers:
        Content-Type: "application/json"
        accept: "application/json"
@@ -25,18 +45,11 @@
       force_basic_auth: true
       url_username: "{{ insights_username }}"
       url_password: "{{ insights_password }}"
-     register: result_playbook
 
-   - name: Filter json
-     set_fact:
-      playbook_output: "{{ result_playbook.content }}"
+   - name: Normalize playbook name to create job template
+     ansible.builtin.set_fact:
+      job_template_playbook: "{{ insights_remediation_name_reboot | lower | replace(' ', '-') | replace('.','') | regex_replace('-{2,}', '-') }}-{{ insights_remediation.json.id }}.yml"
 
-   - name: Save Playbook 
-     ansible.builtin.copy:
-      content: "{{ playbook_output }}"
-      dest: "remediation.yml"
-      mode: '0644'
-
-   - name: Execute the remediation
-     ansible.builtin.shell: "ansible-playbook remediation.yml"
-     delegate_to: localhost
+   - name: Display
+     debug:
+      msg: "{{ job_template_playbook }}"
