@@ -41,19 +41,19 @@
       state: present
       validate_certs: false
 
-    - name: Generate job template with the remediation playbook
-      ansible.controller.job_template:
-       name: "Remediation Playbook Advisory RHXXXXX"
-       controller_host: "{{ controller_host }}"
-       controller_username: "{{ controller_username }}"
-       controller_password: "{{ controller_password }}"
-       validate_certs: false
-       job_type: "run"
-       organization: "Globo Financial Service "
-       inventory: "CVE Hosts"
-       project: "Remediation for CVE"
-       playbook: "{{ playbook_output }}"
-       credentials:
-          - "SC4-Rhel"
-       state: "present"
+   - name: Generate job template with the remediation playbook
+     ansible.controller.job_template:
+      name: "Remediation Playbook Advisory RHXXXXX"
+      controller_host: "{{ controller_host }}"
+      controller_username: "{{ controller_username }}"
+      controller_password: "{{ controller_password }}"
+      validate_certs: false
+      job_type: "run"
+      organization: "Globo Financial Service "
+      inventory: "CVE Hosts"
+      project: "Remediation for CVE"
+      playbook: "{{ playbook_output }}"
+      credentials:
+         - "SC4-Rhel"
+      state: "present"
 
