@@ -3,8 +3,7 @@
   hosts: localhost
 
   vars:
-   patch_advisory_id:
-   advisory_id:
+   patch_advisory_id: 
    systems_list: 
    insights_remediation_name_reboot: "CVE RHSA-20244779"
 
@@ -15,13 +14,13 @@
 
     - name: Retrieve related CVEs from Advisories
       ansible.builtin.uri:
-        url: "https://console.redhat.com/api/patch/v3/advisories/{{ advisory_id }}/systems?page=1&perPage=20&sort=-last_upload&offset=0&limit=20"
-        method: GET
-        url_username: "{{ insights_username }}"
-        url_password: "{{ insights_password }}"
-        force_basic_auth: true
-        status_code: 200
-       register: cves_list
+       url: "https://console.redhat.com/api/patch/v3/advisories/{{ advisory_id }}/systems?page=1&perPage=20&sort=-last_upload&offset=0&limit=20"
+       method: GET
+       url_username: "{{ insights_username }}"
+       url_password: "{{ insights_password }}"
+       force_basic_auth: true
+       status_code: 200
+      register: cves_list
 
     - name: Extract display names
       ansible.builtin.set_fact:
