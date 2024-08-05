@@ -38,7 +38,7 @@
       controller_username: "{{ controller_username }}"
       controller_password: "{{ controller_password }}"
       state: present
-      validate_certs: false
+     # validate_certs: false
 
    #  - name: Generate job template with the generated playbook
    #    ansible.controller.job_template:
