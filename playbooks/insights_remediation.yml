@@ -3,7 +3,8 @@
   hosts: localhost
 
   vars:
-   patch_advisory_id: 
+   patch_advisory_id:
+   advisory_id:
    systems_list: 
    insights_remediation_name_reboot: "CVE RHSA-20244779"
 
