@@ -38,4 +38,5 @@
       mode: '0644'
 
    - name: Execute the remediation
-     ansible.builtin.command: "ansible-playbook remediation.yml"
+     ansible.builtin.shell: "ansible-playbook remediation.yml"
+     delegate_to: localhost
