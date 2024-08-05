@@ -26,10 +26,6 @@
       ansible.builtin.set_fact:
         display_names: "{{ cves_list.json.data | map(attribute='attributes.display_name') | list }}"
 
-    - name: display
-      debug:
-       msg: "{{ display_names }}"
-
     - name: Create Inventory
       ansible.controller.inventory:
        name: "Affected {{ advisory_id }} Hosts"
@@ -103,7 +99,7 @@
       
     - name: Generate job template with the generated playbook
       ansible.controller.job_template:
-       name: "SC4 - CVE Remediation"
+       name: "SC4 - CVE RHSA-20244779 Remediation"
        validate_certs: false
        job_type: "run"
        organization: "Globo Financial Service"
@@ -124,7 +120,7 @@
        controller_password: "{{ controller_password }}"
        validate_certs: false
        organization: "Globo Financial Service"
-       name: "SC4 Remediation Workflow"
+       name: "SC4 CVE RHSA-20244779 Remediation Workflow"
        inventory: "Affected RHSA-2024:4779 Hosts"
 
     - name: Add approval node for workflow
