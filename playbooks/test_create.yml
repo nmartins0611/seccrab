@@ -32,7 +32,7 @@
       playbook_output: "{{ result_playbook.content }}"
 
    - name: Create Project for CVE Remediation
-     awx.awx.project:
+     ansible.controller.project:
       name: "Remediation for CVE"
       organization: "Default"
       controller_username: "{{ controller_username }}"
