@@ -50,6 +50,65 @@
      ansible.builtin.set_fact:
       job_template_playbook: "{{ insights_remediation_name_reboot | lower | replace(' ', '-') | replace('.','') | regex_replace('-{2,}', '-') }}-{{ insights_remediation.json.id }}.yml"
 
-   - name: Display
-     debug:
-      msg: "{{ job_template_playbook }}"
+   - name: Generate job template with the generated playbook
+     ansible.controller.job_template:
+      name: "Remediate CVE"
+      validate_certs: false
+      job_type: "run"
+      organization: "Globo Financial Service"
+      inventory: "Affected RHSA-2024:4779 Hosts"
+      project: "Infrastructure-Insights"
+      playbook: "{{ job_template_playbook }}"
+      credentials:
+        - "SC4-Rhel"
+      controller_host: "{{ controller_host }}"
+      controller_username: "{{ controller_username }}"
+      controller_password: "{{ controller_password }}"
+      state: "present"
+
+   - name: Create workflow template for approval
+     ansible.controller.workflow_job_template:
+      controller_host: "{{ controller_host }}"
+      controller_username: "{{ controller_username }}"
+      controller_password: "{{ controller_password }}"
+      validate_certs: false
+      organization: "Globo Financial Service"
+      name: "CVE remediation workflow"
+      inventory: "Affected RHSA-2024:4779 Hosts"
+
+        # - name: EDA | Insights | Add approval node for workflow
+        #   ansible.controller.workflow_job_template_node:
+        #     controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+        #     controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+        #     controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+        #     validate_certs: false
+        #     organization: Default
+        #     workflow_job_template: "[Insights] {{ hostvars[inventory_hostname].ansible_host }}  CVE remediation workflow"
+        #     identifier: cve-workflow-approval-reboot
+        #     approval_node:
+        #       description: "CVE remediation requires reboot, proceed?"
+        #       name: cve-reboot-approval
+        #       timeout: 3600
+
+        # - name: EDA | Insights | Add remediation node for workflow
+        #   ansible.controller.workflow_job_template_node:
+        #     controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+        #     controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+        #     controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+        #     validate_certs: false
+        #     organization: Default
+        #     workflow_job_template: "[Insights] {{ hostvars[inventory_hostname].ansible_host }}  CVE remediation workflow"
+        #     identifier: cve-remediation-reboot
+        #     unified_job_template: "[Insights] Remediate CVE on {{ hostvars[inventory_hostname].ansible_host }} - Reboot required"
+
+        # - name: EDA | Insights | Link remediation and approval node
+        #   ansible.controller.workflow_job_template_node:
+        #     controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+        #     controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+        #     controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+        #     validate_certs: false
+        #     organization: Default
+        #     workflow_job_template: "[Insights] {{ hostvars[inventory_hostname].ansible_host }}  CVE remediation workflow"
+        #     identifier: cve-workflow-approval-reboot
+        #     success_nodes:
+        #       - cve-remediation-reboot
