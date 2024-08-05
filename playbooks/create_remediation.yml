@@ -55,6 +55,9 @@
      ansible.controller.project_update:
       project: "Infrastructure-Insights"
       timeout: 5
+      controller_host: "{{ controller_host }}"
+      controller_username: "{{ controller_username }}"
+      controller_password: "{{ controller_password }}"
       
   
    - name: Generate job template with the generated playbook
