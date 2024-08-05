@@ -58,8 +58,11 @@
       controller_host: "{{ controller_host }}"
       controller_username: "{{ controller_username }}"
       controller_password: "{{ controller_password }}"
+
+   - name: playbook
+     debug:
+      msg: "{{ job_template_playbook }}"
       
-  
    - name: Generate job template with the generated playbook
      ansible.controller.job_template:
       name: "Remediate CVE"
