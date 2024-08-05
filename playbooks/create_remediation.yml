@@ -52,7 +52,7 @@
 
   
    - name: Update Insights Repo
-     ansible.controller.project_update
+     ansible.controller.project_update:
       project: "Infrastructure-Insights"
       timeout: 5
       
