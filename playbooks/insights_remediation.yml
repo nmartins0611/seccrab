@@ -130,7 +130,7 @@
        controller_password: "{{ controller_password }}"
        validate_certs: false
        organization: "Globo Financial Service"
-       workflow_job_template: "SC4 Remediation Workflow"
+       workflow_job_template: "SC4 CVE RHSA-20244779 Remediation Workflow"
        identifier: cve-approval
        approval_node:
          description: "Would you like to remediate affected systems?"
@@ -144,9 +144,9 @@
        controller_password: "{{ controller_password }}"
        validate_certs: false
        organization: "Globo Financial Service"
-       workflow_job_template: "SC4 Remediation Workflow"
+       workflow_job_template: "SC4 CVE RHSA-20244779 Remediation Workflow"
        identifier: cve-remediation
-       unified_job_template: "SC4 - CVE Remediation"
+       unified_job_template: "SC4 - CVE RHSA-20244779 Remediation"
 
     - name: Link remediation and approval node
       ansible.controller.workflow_job_template_node:
@@ -155,7 +155,7 @@
        controller_password: "{{ controller_password }}"
        validate_certs: false
        organization: "Globo Financial Service"
-       workflow_job_template: "SC4 Remediation Workflow"
+       workflow_job_template: "SC4 CVE RHSA-20244779 Remediation Workflow"
        identifier: cve-approval
        success_nodes:
          - cve-remediation
