@@ -162,6 +162,22 @@
     - name: Create Templates and workflows for Prod
       block:
 
+       - name: Generate job Template for DEV
+         ansible.controller.job_template:
+          name: "SC4 - PROD RHSA-20244779 Remediation"
+          validate_certs: false
+          job_type: "run"
+          organization: "Globo Financial Service"
+          inventory: "Affected PROD {{ advisory_id }} Hosts"
+          project: "Infrastructure-Insights"
+          playbook: "{{ job_template_playbook }}"
+          credentials:
+            - "SC4-Rhel"
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          state: "present"
+
       - name: Create workflow template for approval
         ansible.controller.workflow_job_template:
          controller_host: "{{ controller_host }}"
@@ -195,7 +211,7 @@
          organization: "Globo Financial Service"
          workflow_job_template: "PROD CVE RHSA-20244779 Remediation Workflow"
          identifier: cve-remediation
-         unified_job_template: "PROD - CVE RHSA-20244779 Remediation"
+         unified_job_template: "SC4 - PROD RHSA-20244779 Remediation"
 
       - name: Link remediation and approval node
         ansible.controller.workflow_job_template_node:
