@@ -12,7 +12,7 @@
 
   tasks:
 
-    - name: Retrieve related CVEs from Advisories
+    - name: EDA | Insights | Retrieve related CVEs from Advisories
       ansible.builtin.uri:
        url: "https://console.redhat.com/api/patch/v3/advisories/{{ advisory_id }}/systems?page=1&perPage=20&sort=-last_upload&offset=0&limit=20"
        method: GET
@@ -22,30 +22,68 @@
        status_code: 200
       register: cves_list
 
-    - name: Extract display names
-      ansible.builtin.set_fact:
-        display_names: "{{ cves_list.json.data | map(attribute='attributes.display_name') | list }}"
+    - name: Gather affected hosts and groups
+      block:
 
-    - name: Create Inventory
+        - name: Extract display names with dev tags
+          set_fact:
+           display_dev: "{{ cves_list.json.data | json_query('[?attributes.tags[?value==`dev`]].attributes.display_name')}}"
+
+        - name: Extract display names with prod tags
+          set_fact:
+           display_prod: "{{ cves_list.json.data | json_query('[?attributes.tags[?value==`prod-tx`]].attributes.display_name')}}"
+   
+    - name: Gather affected host IDS
+      block:
+
+       - name: Extract machine IDs with dev tags
+         set_fact:
+          display_devID: "{{ cves_list.json.data | json_query('[?attributes.tags[?value==`dev`]].id')}}"
+
+       - name: Extract machine IDs with prod tags
+         set_fact:
+          display_prodID: "{{ cves_list.json.data | json_query('[?attributes.tags[?value==`prod-tx`]].id')}}"
+
+
+    - name: Create Inventory for dev
       ansible.controller.inventory:
-       name: "Affected {{ advisory_id }} Hosts"
+       name: "Affected DEV {{ advisory_id }} Hosts"
        organization: "Globo Financial Service"
        state: present
        controller_host: "{{ controller_host }}"
        controller_username: "{{ controller_username }}"
        controller_password: "{{ controller_password }}"
 
-    - name: Add hosts to AWX inventory
+    - name: Add hosts to Dev inventory
       ansible.controller.host:
        name: "{{ item }}"
-       inventory: "Affected {{ advisory_id }} Hosts"
+       inventory: "Affected DEV {{ advisory_id }} Hosts"
        state: present
        controller_host: "{{ controller_host }}"
        controller_username: "{{ controller_username }}"
        controller_password: "{{ controller_password }}"
-       enabled: true
-      loop: "{{ display_names }}"
-      when: display_names | length > 0
+      loop: "{{ display_dev }}"
+      when: display_dev | length > 0
+
+    - name: Create Inventory for PROD
+      ansible.controller.inventory:
+       name: "Affected PROD {{ advisory_id }} Hosts"
+       organization: "Globo Financial Service"
+       state: present
+       controller_host: "{{ controller_host }}"
+       controller_username: "{{ controller_username }}"
+       controller_password: "{{ controller_password }}"
+
+    - name: Add hosts to Prod inventory
+      ansible.controller.host:
+       name: "{{ item }}"
+       inventory: "Affected PROD {{ advisory_id }} Hosts"
+       state: present
+       controller_host: "{{ controller_host }}"
+       controller_username: "{{ controller_username }}"
+       controller_password: "{{ controller_password }}"
+      loop: "{{ display_prod }}"
+      when: display_prod | length > 0
 
     - name: Create Remediation Project
       ansible.builtin.uri:
