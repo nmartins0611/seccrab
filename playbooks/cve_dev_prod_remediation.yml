@@ -119,7 +119,7 @@
         Connection: "keep-alive"
        body_format: json 
        body: '{"name":{{ payload_name }},"add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":{{ display_prodID | to_json }} }],"systems":[]},"auto_reboot":false}'
-        return_content: true
+       return_content: true
        force_basic_auth: true
        url_username: "{{ insights_username }}"
        url_password: "{{ insights_password }}"
