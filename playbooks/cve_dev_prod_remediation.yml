@@ -178,40 +178,40 @@
           controller_password: "{{ controller_password }}"
           state: "present"
 
-      - name: Create workflow template for approval
-        ansible.controller.workflow_job_template:
-         controller_host: "{{ controller_host }}"
-         controller_username: "{{ controller_username }}"
-         controller_password: "{{ controller_password }}"
-         validate_certs: false
-         organization: "Globo Financial Service"
-         name: "PROD CVE RHSA-20244779 Remediation Workflow"
-         inventory: "Affected PROD {{ advisory_id }} Hosts"
+       - name: Create workflow template for approval
+         ansible.controller.workflow_job_template:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          name: "PROD CVE RHSA-20244779 Remediation Workflow"
+          inventory: "Affected PROD {{ advisory_id }} Hosts"
 
-      - name: Add approval node for workflow
-        ansible.controller.workflow_job_template_node:
-         controller_host: "{{ controller_host }}"
-         controller_username: "{{ controller_username }}"
-         controller_password: "{{ controller_password }}"
-         validate_certs: false
-         organization: "Globo Financial Service"
-         workflow_job_template: "PROD CVE RHSA-20244779 Remediation Workflow"
-         identifier: cve-approval
-         approval_node:
-           description: "Would you like to remediate affected systems?"
-           name: cve-approval
-           timeout: 3600
+       - name: Add approval node for workflow
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "PROD CVE RHSA-20244779 Remediation Workflow"
+          identifier: cve-approval
+          approval_node:
+            description: "Would you like to remediate affected systems?"
+            name: cve-approval
+            timeout: 3600
 
-      - name: Add remediation node for workflow
-        ansible.controller.workflow_job_template_node:
-         controller_host: "{{ controller_host }}"
-         controller_username: "{{ controller_username }}"
-         controller_password: "{{ controller_password }}"
-         validate_certs: false
-         organization: "Globo Financial Service"
-         workflow_job_template: "PROD CVE RHSA-20244779 Remediation Workflow"
-         identifier: cve-remediation
-         unified_job_template: "SC4 - PROD RHSA-20244779 Remediation"
+       - name: Add remediation node for workflow
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "PROD CVE RHSA-20244779 Remediation Workflow"
+          identifier: cve-remediation
+          unified_job_template: "SC4 - PROD RHSA-20244779 Remediation"
 
       - name: Link remediation and approval node
         ansible.controller.workflow_job_template_node:
