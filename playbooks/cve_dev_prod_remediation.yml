@@ -159,8 +159,8 @@
           controller_password: "{{ controller_password }}"
           state: "present"
 
-   - name: Create Templates and workflows for Prod
-     block:
+    - name: Create Templates and workflows for Prod
+      block:
 
       - name: Create workflow template for approval
         ansible.controller.workflow_job_template:
