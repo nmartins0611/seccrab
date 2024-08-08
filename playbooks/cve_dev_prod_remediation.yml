@@ -89,7 +89,7 @@
 
     - name: Create Remediation Project
       ansible.builtin.uri:
-      url: https://console.redhat.com/api/remediations/v1/remediations
+       url: https://console.redhat.com/api/remediations/v1/remediations
        method: POST
        status_code:
         - 200
