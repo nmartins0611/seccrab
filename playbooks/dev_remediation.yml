@@ -114,7 +114,7 @@
  
        - name: Generate job Template for DEV
          ansible.controller.job_template:
-          name: "SC4 CVE remediation - Developement RHSA-20244779"
+          name: "SC4 CVE remediation - Development RHSA-20244779"
           validate_certs: false
           job_type: "run"
           organization: "Globo Financial Service"
