@@ -164,13 +164,13 @@
     - name: Create Templates and workflows for Prod
       block:
 
-       - name: Generate job Template for DEV
+       - name: Generate job Template for Prod
          ansible.controller.job_template:
-          name: "SC4 - ALERT RHSA-20244779 Remediation - DEV"
+          name: "SC4 - PROD RHSA-20244779 Remediation"
           validate_certs: false
           job_type: "run"
           organization: "Globo Financial Service"
-          inventory: "Affected DEV {{ advisory_id }} Hosts"
+          inventory: "Affected PROD {{ advisory_id }} Hosts"
           project: "Infrastructure-Insights"
           playbook: "{{ job_template_playbook }}"
           credentials:
