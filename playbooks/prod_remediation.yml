@@ -68,7 +68,7 @@
         accept: "application/json"
         Connection: "keep-alive"
       # body_format: json 
-       body: '{"name":"CVE PROD RHSA-20244779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["c633ac5e-5a29-499f-b06c-20332ad29cf9","03f02020-55aa-49f4-993e-0ce6a1393805"]}],"systems":[]},"auto_reboot":false}'
+       body: '{"name":"CVE PROD RHSA-20244779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["c633ac5e-5a29-499f-b06c-20332ad29cf9","d3fc7130-f307-4968-8ac3-0a927e1ef2f1"]}],"systems":[]},"auto_reboot":false}'
        return_content: true
        force_basic_auth: true
        url_username: "{{ insights_username }}"
@@ -87,7 +87,7 @@
         accept: "application/json"
         Connection: "keep-alive"
       # body_format: json 
-       body: '{"issues":[{"id":"patch-advisory:RHSA-2024:4779","systems":["c633ac5e-5a29-499f-b06c-20332ad29cf9","03f02020-55aa-49f4-993e-0ce6a1393805"]}]}'
+       body: '{"issues":[{"id":"patch-advisory:RHSA-2024:4779","systems":["c633ac5e-5a29-499f-b06c-20332ad29cf9","d3fc7130-f307-4968-8ac3-0a927e1ef2f1"]}]}'
        return_content: true
        force_basic_auth: true
        url_username: "{{ insights_username }}"
