@@ -164,11 +164,11 @@
 
        - name: Generate job Template for DEV
          ansible.controller.job_template:
-          name: "SC4 - PROD RHSA-20244779 Remediation"
+          name: "SC4 - ALERT RHSA-20244779 Remediation - DEV"
           validate_certs: false
           job_type: "run"
           organization: "Globo Financial Service"
-          inventory: "Affected PROD {{ advisory_id }} Hosts"
+          inventory: "Affected DEV {{ advisory_id }} Hosts"
           project: "Infrastructure-Insights"
           playbook: "{{ job_template_playbook }}"
           credentials:
@@ -185,7 +185,7 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          name: "PROD CVE RHSA-20244779 Remediation Workflow"
+          name: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
           inventory: "Affected PROD {{ advisory_id }} Hosts"
 
        - name: Add approval node for workflow
@@ -195,7 +195,7 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          workflow_job_template: "PROD CVE RHSA-20244779 Remediation Workflow"
+          workflow_job_template: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
           identifier: cve-approval
           approval_node:
             description: "Would you like to remediate affected systems?"
@@ -209,7 +209,7 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          workflow_job_template: "PROD CVE RHSA-20244779 Remediation Workflow"
+          workflow_job_template: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
           identifier: cve-remediation
           unified_job_template: "SC4 - PROD RHSA-20244779 Remediation"
 
@@ -220,7 +220,7 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          workflow_job_template: "PROD CVE RHSA-20244779 Remediation Workflow"
+          workflow_job_template: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
           identifier: cve-approval
           success_nodes:
            - cve-remediation
