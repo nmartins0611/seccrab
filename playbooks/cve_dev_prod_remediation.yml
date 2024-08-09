@@ -49,7 +49,7 @@
 
     - name: Create Inventory for dev
       ansible.controller.inventory:
-       name: "Affected DEV {{ advisory_id }} Hosts"
+       name: "SC4 CVE Hosts - Development"  
        organization: "Globo Financial Service"
        state: present
        controller_host: "{{ controller_host }}"
@@ -59,7 +59,7 @@
     - name: Add hosts to Dev inventory
       ansible.controller.host:
        name: "{{ item }}"
-       inventory: "Affected DEV {{ advisory_id }} Hosts"
+       inventory: "SC4 CVE Hosts - Development"  
        state: present
        enabled: true
        controller_host: "{{ controller_host }}"
@@ -70,7 +70,7 @@
 
     - name: Create Inventory for PROD
       ansible.controller.inventory:
-       name: "Affected PROD {{ advisory_id }} Hosts"
+       name: "SC4 CVE Hosts - Production"
        organization: "Globo Financial Service"
        state: present
        controller_host: "{{ controller_host }}"
@@ -80,7 +80,7 @@
     - name: Add hosts to Prod inventory
       ansible.controller.host:
        name: "{{ item }}"
-       inventory: "Affected PROD {{ advisory_id }} Hosts"
+       inventory: "SC4 CVE Hosts - Production"
        state: present
        enabled: true
        controller_host: "{{ controller_host }}"
@@ -151,7 +151,7 @@
           validate_certs: false
           job_type: "run"
           organization: "Globo Financial Service"
-          inventory: "Affected DEV {{ advisory_id }} Hosts"
+          inventory: "SC4 CVE Hosts - Development"  
           project: "Infrastructure-Insights"
           playbook: "{{ job_template_playbook }}"
           credentials:
@@ -170,7 +170,7 @@
           validate_certs: false
           job_type: "run"
           organization: "Globo Financial Service"
-          inventory: "Affected PROD {{ advisory_id }} Hosts"
+          inventory: "SC4 CVE Hosts - Production"
           project: "Infrastructure-Insights"
           playbook: "{{ job_template_playbook }}"
           credentials:
@@ -188,7 +188,7 @@
           validate_certs: false
           organization: "Globo Financial Service"
           name: "SC4 CVE remediation workflow - Production RHSA-20244779"
-          inventory: "Affected PROD {{ advisory_id }} Hosts"
+          inventory: "SC4 CVE Hosts - Production"
 
        - name: Add approval node for workflow
          ansible.controller.workflow_job_template_node:
