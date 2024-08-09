@@ -147,7 +147,7 @@
  
        - name: Generate job Template for DEV
          ansible.controller.job_template:
-          name: "SC4 - DEV RHSA-20244779 Remediation"
+          name: "SC4 CVE remediation - Developement RHSA-20244779"
           validate_certs: false
           job_type: "run"
           organization: "Globo Financial Service"
@@ -166,7 +166,7 @@
 
        - name: Generate job Template for Prod
          ansible.controller.job_template:
-          name: "SC4 - PROD RHSA-20244779 Remediation"
+          name: "SC4 CVE remediation - Production RHSA-20244779"
           validate_certs: false
           job_type: "run"
           organization: "Globo Financial Service"
@@ -187,7 +187,7 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          name: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
+          name: "SC4 CVE remediation workflow - Production RHSA-20244779"
           inventory: "Affected PROD {{ advisory_id }} Hosts"
 
        - name: Add approval node for workflow
@@ -197,7 +197,7 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          workflow_job_template: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
           identifier: cve-approval
           approval_node:
             description: "Would you like to remediate affected systems?"
@@ -211,9 +211,9 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          workflow_job_template: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
           identifier: cve-remediation
-          unified_job_template: "SC4 - PROD RHSA-20244779 Remediation"
+          unified_job_template: "SC4 CVE remediation - Production RHSA-20244779"
 
        - name: Link remediation and approval node
          ansible.controller.workflow_job_template_node:
@@ -222,7 +222,7 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          workflow_job_template: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
           identifier: cve-approval
           success_nodes:
            - cve-remediation
@@ -234,7 +234,7 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          workflow_job_template: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
           identifier: insights-update
           unified_job_template: "SC4 - Insights Update"
 
@@ -245,7 +245,16 @@
           controller_password: "{{ controller_password }}"
           validate_certs: false
           organization: "Globo Financial Service"
-          workflow_job_template: "SC4 - ALERT RHSA-20244779 Remediation WF - PROD"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
           identifier: cve-remediation
           always_nodes:
            - insights-update
+
+       - name: EDA | Insights | Run remediation workflow
+         ansible.controller.workflow_launch:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          name: "SC4 CVE remediation workflow - Production RHSA-20244779"
+         delegate_to: localhost
