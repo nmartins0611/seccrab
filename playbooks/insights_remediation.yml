@@ -198,3 +198,28 @@
        identifier: cve-approval
        success_nodes:
          - cve-remediation
+
+    - name: Add Insights Update
+      ansible.controller.workflow_job_template_node:
+       controller_host: "{{ controller_host }}"
+       controller_username: "{{ controller_username }}"
+       controller_password: "{{ controller_password }}"
+       validate_certs: false
+       organization: "Globo Financial Service"
+       workflow_job_template: "SC4 CVE RHSA-20244779 Remediation Workflow"
+       identifier: insights-scan
+       unified_job_template: "SC4 - Insights Update"
+
+    - name: Link to Insights
+      ansible.controller.workflow_job_template_node:
+       controller_host: "{{ controller_host }}"
+       controller_username: "{{ controller_username }}"
+       controller_password: "{{ controller_password }}"
+       validate_certs: false
+       organization: "Globo Financial Service"
+       workflow_job_template: "SC4 CVE RHSA-20244779 Remediation Workflow"
+       identifier: cve-remediation
+       always_nodes:
+         - insights-scan
+
+      
