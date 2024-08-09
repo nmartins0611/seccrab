@@ -1,0 +1,208 @@
+---
+- name: Send POST request to Red Hat API
+  hosts: localhost
+
+  vars:
+   patch_advisory_id: 
+   systems_list: 
+   insights_remediation_name_reboot: "CVE PROD RHSA-20244779"
+   payload_name: "CVE RHSA-20244779"
+   advisory_id: "RHSA-2024:4779"
+
+  vars_files:
+   - insights
+
+  tasks:
+
+    - name: Retrieve related CVEs from Advisories
+      ansible.builtin.uri:
+       url: "https://console.redhat.com/api/patch/v3/advisories/{{ advisory_id }}/systems?page=1&perPage=20&sort=-last_upload&offset=0&limit=20"
+       method: GET
+       url_username: "{{ insights_username }}"
+       url_password: "{{ insights_password }}"
+       force_basic_auth: true
+       status_code: 200
+      register: cves_list
+
+    - name: Gather affected hosts and groups
+      block:
+
+        - name: Extract display names with prod tags
+          set_fact:
+           display_prod: "{{ cves_list.json.data | json_query('[?attributes.tags[?value==`prod-tx`]].attributes.display_name')}}"
+
+        - name: Extract machine IDs with prod tags
+          set_fact:
+           display_prodID: "{{ cves_list.json.data | json_query('[?attributes.tags[?value==`prod-tx`]].id')}}"
+
+    - name: Create Inventory for PROD
+      ansible.controller.inventory:
+       name: "SC4 CVE Hosts - Production"
+       organization: "Globo Financial Service"
+       state: present
+       controller_host: "{{ controller_host }}"
+       controller_username: "{{ controller_username }}"
+       controller_password: "{{ controller_password }}"
+
+    - name: Add hosts to Prod inventory
+      ansible.controller.host:
+       name: "{{ item }}"
+       inventory: "SC4 CVE Hosts - Production"
+       state: present
+       enabled: true
+       controller_host: "{{ controller_host }}"
+       controller_username: "{{ controller_username }}"
+       controller_password: "{{ controller_password }}"
+      loop: "{{ display_prod }}"
+      when: display_prod | length > 0
+
+    - name: Create Remediation Project
+      ansible.builtin.uri:
+       url: https://console.redhat.com/api/remediations/v1/remediations
+       method: POST
+       status_code:
+        - 200
+        - 201
+       headers:
+        Content-Type: "application/json"
+        accept: "application/json"
+        Connection: "keep-alive"
+      # body_format: json 
+       body: '{"name":"CVE PROD RHSA-20244779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["c633ac5e-5a29-499f-b06c-20332ad29cf9","03f02020-55aa-49f4-993e-0ce6a1393805"]}],"systems":[]},"auto_reboot":false}'
+       return_content: true
+       force_basic_auth: true
+       url_username: "{{ insights_username }}"
+       url_password: "{{ insights_password }}"
+      register: insights_remediation
+
+    - name: Create Remediation Playbook
+      ansible.builtin.uri:
+       url: https://console.redhat.com/api/remediations/v1/playbook
+       method: POST
+       status_code:
+        - 200
+        - 201
+       headers:
+        Content-Type: "application/json"
+        accept: "application/json"
+        Connection: "keep-alive"
+      # body_format: json 
+       body: '{"issues":[{"id":"patch-advisory:RHSA-2024:4779","systems":["c633ac5e-5a29-499f-b06c-20332ad29cf9","03f02020-55aa-49f4-993e-0ce6a1393805"]}]}'
+       return_content: true
+       force_basic_auth: true
+       url_username: "{{ insights_username }}"
+       url_password: "{{ insights_password }}"
+
+    - name: Normalize playbook name to create job template
+      ansible.builtin.set_fact:
+       job_template_playbook: "{{ insights_remediation_name_reboot | lower | replace(' ', '-') | replace('.','') | regex_replace('-{2,}', '-') }}-{{ insights_remediation.json.id }}.yml"
+  
+    - name: Update Insights Repo
+      ansible.controller.project_update:
+       project: "Infrastructure-Insights"
+       timeout: 5
+       controller_host: "{{ controller_host }}"
+       controller_username: "{{ controller_username }}"
+       controller_password: "{{ controller_password }}"
+
+    - name: Created Remediation playbook
+      debug:
+       msg: "{{ job_template_playbook }}"
+
+    - name: Create Templates and workflows for Prod
+      block:
+
+       - name: Generate job Template for Prod
+         ansible.controller.job_template:
+          name: "SC4 CVE remediation - Production RHSA-20244779"
+          validate_certs: false
+          job_type: "run"
+          organization: "Globo Financial Service"
+          inventory: "SC4 CVE Hosts - Production"
+          project: "Infrastructure-Insights"
+          playbook: "{{ job_template_playbook }}"
+          credentials:
+            - "SC4-Rhel"
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          state: "present"
+
+       - name: Create workflow template for approval
+         ansible.controller.workflow_job_template:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          name: "SC4 CVE remediation workflow - Production RHSA-20244779"
+          inventory: "SC4 CVE Hosts - Production"
+
+       - name: Add approval node for workflow
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
+          identifier: cve-approval
+          approval_node:
+            description: "Would you like to remediate affected systems?"
+            name: cve-approval
+            timeout: 3600
+
+       - name: Add remediation node for workflow
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
+          identifier: cve-remediation
+          unified_job_template: "SC4 CVE remediation - Production RHSA-20244779"
+
+       - name: Link remediation and approval node
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
+          identifier: cve-approval
+          success_nodes:
+           - cve-remediation
+           
+       - name: Add Insights Update
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
+          identifier: insights-update
+          unified_job_template: "SC4 - Insights Update"
+
+       - name: Link Update to remediation
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
+          identifier: cve-remediation
+          always_nodes:
+           - insights-update
+
+       - name: EDA | Insights | Run remediation workflow
+         ansible.controller.workflow_launch:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          name: "SC4 CVE remediation workflow - Production RHSA-20244779"
+         delegate_to: localhost
