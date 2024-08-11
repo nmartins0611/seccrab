@@ -10,7 +10,8 @@
     SN_USERNAME:
     SN_PASSWORD:
     advisory_id:
-    
+
+
   vars_files:
    - insights
     
@@ -89,4 +90,10 @@
         Possible Solution: "{{ solution }}"
       impact: high
       urgency: high
+     register: new_change_request
      delegate_to: localhost
+
+   - name: Extract Record
+     ansible.builtin.set_fact:
+       incident_number: "{{ new_change_request.record.number }}"
+
