@@ -1,0 +1,11 @@
+---
+- name: Python Check
+  hosts: localhost
+  tasks:
+    - name: Broker app check
+      command: curl localhost:5000
+
+    - name: System Process Status
+      command: curl localhost:5000/status
+
+
