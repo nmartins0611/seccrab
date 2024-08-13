@@ -1,11 +1,22 @@
 ---
-- name: Python Check
-  hosts: localhost
+- name: Trigger curl commands to Flask application
+  hosts: all
+  become: yes
   tasks:
-    - name: Broker app check
-      command: curl localhost:5000
+    - name: Trigger application status curl command
+      command: curl -s http://localhost:5000
+      register: app_status
+      ignore_errors: yes
 
-    - name: System Process Status
-      command: curl localhost:5000/status
+    - name: Print application status response
+      debug:
+        msg: "Application Status Response: {{ app_status.stdout }}"
 
+    - name: Trigger service status curl command
+      command: curl -s http://localhost:5000/status
+      register: service_status
+      ignore_errors: yes
 
+    - name: Print service status response
+      debug:
+        msg: "Service Status Response: {{ service_status.stdout }}"
