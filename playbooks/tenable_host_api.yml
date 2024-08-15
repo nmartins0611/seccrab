@@ -10,7 +10,7 @@
 
     - name: Send GET request to Nessus API
       uri:
-        url: "https://ec2-54-193-92-113.us-west-1.compute.amazonaws.com:8834/scans/74/hosts/2"
+        url: "{{ url_t }}/scans/74/hosts/2"
         method: GET
         headers:
           X-ApiKeys: "accessKey= {{ accessKey }} ; secretKey= {{ secretKey }}"
