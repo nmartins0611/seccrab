@@ -1,0 +1,23 @@
+---
+- name: Tenable API 
+  hosts: localhost
+  vars: 
+    accessKey: 
+    secretKey: 
+    url:
+
+  tasks:
+
+    - name: Send GET request to Nessus API
+      uri:
+        url: "{{ url }}/scans/74/hosts/2"
+        method: GET
+        headers:
+          X-ApiKeys: "accessKey= {{ accessKey }} ; secretKey= {{ secretKey }}"
+          Content-Type: "application/json"
+        validate_certs: no
+      register: result
+
+    - name: Print the result
+      debug:
+        var: result
