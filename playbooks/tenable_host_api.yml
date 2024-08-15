@@ -4,13 +4,13 @@
   vars: 
     accessKey: 
     secretKey: 
-    url:
+    url_t:
 
   tasks:
 
     - name: Send GET request to Nessus API
       uri:
-        url: "{{ url }}/scans/74/hosts/2"
+        url: "{{ url_t }}/scans/74/hosts/2"
         method: GET
         headers:
           X-ApiKeys: "accessKey= {{ accessKey }} ; secretKey= {{ secretKey }}"
