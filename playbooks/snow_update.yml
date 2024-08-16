@@ -10,7 +10,7 @@
     SN_USERNAME:
     SN_PASSWORD:
     advisory_id:
-    incident_number: CHG0031892
+    incident_number: 
 
 
   vars_files:
