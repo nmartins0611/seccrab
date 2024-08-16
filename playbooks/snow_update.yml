@@ -89,7 +89,11 @@
       close_code: "successful"
       close_notes: |
         Remediated Development Systems: "{{ display_dev }}"
+        
         Remediated Production Systems: "{{  display_prod }}"
+        
         Total Affected systems: "{{ affected_systems }}"
+        
         CVE: Resolved - "{{ cves }}"
+        
       state: closed
