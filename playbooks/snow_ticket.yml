@@ -10,6 +10,7 @@
     SN_USERNAME:
     SN_PASSWORD:
     advisory_id:
+    incident_number:
 
 
   vars_files:
@@ -69,6 +70,27 @@
      ansible.builtin.set_fact:
        topic: "{{ cve_details.json.data.attributes.topic }}"
 
+   - name: Log Change request
+     servicenow.itsm.change_request:
+      instance:   
+       host: "{{ SN_HOST }}"
+       username: "{{ SN_USERNAME }}"
+       password: "{{ SN_PASSWORD }}"
+      type: normal
+      risk: moderate
+      assignment_group: "Change Management"
+      state: assess
+      short_description: Vulnerabilities detected - Remediation needed
+      description: |
+
+        Affected systems: "{{ affected_systems }}"
+
+        CVE Description: "{{ cves_description }}"
+        Insights URL: "{{ insights_url }}"
+       
+     register: new_change_request
+
+
    - name: Create incident
      servicenow.itsm.incident:
       instance:
@@ -79,6 +101,9 @@
       caller: "{{ lookup('env', 'SN_USERNAME') }}"
       short_description: New Advisory CVE Type - "{{ cve_type }}" Affected systems - "{{ affected_systems }}"
       description: |
+      
+        Change Request Logged: "{{ new_change_request.record.number }}"
+
         Alert Type: "{{ cve_type }}"  CVE:  "{{ cves }}"
         Incident Topic: "{{ topic }}"
 
@@ -88,6 +113,9 @@
         Insights URL: "{{ insights_url }}"
 
         Possible Solution: "{{ solution }}"
+
+        Change Request: "{{ new_change_request.record.number }}"
+
       impact: high
       urgency: high
      register: new_change_request
@@ -96,4 +124,3 @@
    - name: Extract Record
      ansible.builtin.set_fact:
        incident_number: "{{ new_change_request.record.number }}"
-
