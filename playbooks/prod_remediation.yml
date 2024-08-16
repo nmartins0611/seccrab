@@ -198,6 +198,31 @@
           always_nodes:
            - insights-update
 
+       - name: Add SnowUpdate
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
+          identifier: snow-update
+          unified_job_template: "SC4 - ServiceNow Update"
+
+       - name: Link Update to Snow
+         ansible.controller.workflow_job_template_node:
+          controller_host: "{{ controller_host }}"
+          controller_username: "{{ controller_username }}"
+          controller_password: "{{ controller_password }}"
+          validate_certs: false
+          organization: "Globo Financial Service"
+          workflow_job_template: "SC4 CVE remediation workflow - Production RHSA-20244779"
+          identifier: insights-update
+          always_nodes:
+           - snow-update
+
+           
+
        # - name: EDA | Insights | Run remediation workflow
        #   ansible.controller.workflow_launch:
        #    controller_host: "{{ controller_host }}"
