@@ -124,3 +124,5 @@
    - name: Extract Record
      ansible.builtin.set_fact:
        incident_number: "{{ new_change_request.record.number }}"
+       cacheable: true
+       
