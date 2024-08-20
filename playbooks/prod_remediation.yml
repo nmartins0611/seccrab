@@ -138,14 +138,6 @@
           organization: "Globo Financial Service"
           name: "SC4 CVE remediation workflow - Production RHSA-20244779"
           inventory: "SC4 CVE Hosts - Production"
-          survey_enabled: yes
-          survey_spec:
-           - question_name: "Do you want to proceed?"
-             question_description: "Please provide the Change Control number"
-             required: yes
-             type: "text"
-             variable: "incident_number"
-             default: "yes"
 
        - name: Add approval node for workflow
          ansible.controller.workflow_job_template_node:
