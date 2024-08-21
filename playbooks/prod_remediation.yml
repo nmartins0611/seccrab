@@ -222,11 +222,11 @@
        #    always_nodes:
        #     - snow-update
 
-       - name: Run remediation workflow
-         ansible.controller.workflow_launch:
-          controller_host: "{{ controller_host }}"
-          controller_username: "{{ controller_username }}"
-          controller_password: "{{ controller_password }}"
-          validate_certs: false
-          name: "SC4 CVE remediation workflow - Production RHSA-20244779"
-         delegate_to: localhost
+       # - name: Run remediation workflow
+       #   ansible.controller.workflow_launch:
+       #    controller_host: "{{ controller_host }}"
+       #    controller_username: "{{ controller_username }}"
+       #    controller_password: "{{ controller_password }}"
+       #    validate_certs: false
+       #    name: "SC4 CVE remediation workflow - Production RHSA-20244779"
+       #   delegate_to: localhost
