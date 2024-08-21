@@ -1,23 +1,60 @@
 ---
 - name: Tenable API 
   hosts: localhost
+  connection: httpapi
   vars: 
     accessKey: 
     secretKey: 
     url_t:
+    ansible_httpapi_port: 443
+    ansible_httpapi_use_ssl: true
+    ansible_httpapi_validate_certs: false
+    SN_HOST:
+    SN_USERNAME:
+    SN_PASSWORD:
+    advisory_id:
+    incident_number:
+
+  vars_files:
+    - insights
+
 
   tasks:
 
     - name: Send GET request to Nessus API
-      uri:
+      ansible.builtin.uri:
         url: "https://ec2-54-193-92-113.us-west-1.compute.amazonaws.com:8834/scans/74/hosts/2"
         method: GET
         headers:
           X-ApiKeys: "accessKey= {{ accessKey }} ; secretKey= {{ secretKey }}"
           Content-Type: "application/json"
-        validate_certs: no
-      register: result
+        validate_certs: false
+      register: output
 
-    - name: Print the result
-      debug:
-        var: result
+    - name: Generate vulnerability report
+      ansible.builtin.template:
+        src: vulnerability_report.j2
+        dest: /tmp/report.txt
+      vars:
+        info: "{{ output.json['info'] }}"
+        vulnerabilities: "{{ output.json['vulnerabilities'] }}"
+      delegate_to: localhost
+
+    - name: Create incident
+      servicenow.itsm.incident:
+       instance:
+        host: "{{ SN_HOST }}"
+        username: "{{ SN_USERNAME }}"
+        password: "{{ SN_PASSWORD }}"
+       state: new
+       caller: "{{ lookup('env', 'SN_USERNAME') }}"
+       short_description: New Tenable Notice
+       description: |
+       impact: high
+       urgency: high
+       attachments:
+        - path: /tmp/report.txt
+          type: text/plain
+          name: Tenable Host
+      register: new_change_request
+      delegate_to: localhost
