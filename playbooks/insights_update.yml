@@ -15,8 +15,8 @@
       register: __insights_scan
       changed_when: __insights_scan.rc == 0
 
-    - name: Run malware scan initial config
-      ansible.builtin.command: >
-        /bin/insights-client --collector malware-detection
-      register: __malware_scan
-      changed_when: __malware_scan.rc == 0
+    # - name: Run malware scan initial config
+    #   ansible.builtin.command: >
+    #     /bin/insights-client --collector malware-detection
+    #   register: __malware_scan
+    #   changed_when: __malware_scan.rc == 0
