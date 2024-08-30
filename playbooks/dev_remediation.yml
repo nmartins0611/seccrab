@@ -44,17 +44,29 @@
        controller_username: "{{ controller_username }}"
        controller_password: "{{ controller_password }}"
 
+    # - name: Add hosts to Dev inventory
+    #   ansible.controller.host:
+    #    name: "{{ item }}"
+    #    inventory: "SC4 CVE Hosts - Development"  
+    #    state: present
+    #    enabled: true
+    #    controller_host: "{{ controller_host }}"
+    #    controller_username: "{{ controller_username }}"
+    #    controller_password: "{{ controller_password }}"
+    #   loop: "{{ display_dev }}"
+    #   when: display_dev | length > 0
+
     - name: Add hosts to Dev inventory
       ansible.controller.host:
-       name: "{{ item }}"
+       name: "rhel01-vul-aap-wave.demoredhat.com"
        inventory: "SC4 CVE Hosts - Development"  
        state: present
        enabled: true
        controller_host: "{{ controller_host }}"
        controller_username: "{{ controller_username }}"
        controller_password: "{{ controller_password }}"
-      loop: "{{ display_dev }}"
-      when: display_dev | length > 0
+   #   loop: "{{ display_dev }}"
+   #   when: display_dev | length > 0
 
     - name: Create Remediation Project
       ansible.builtin.uri:
