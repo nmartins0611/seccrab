@@ -88,7 +88,7 @@
         accept: "application/json"
         Connection: "keep-alive"
       # body_format: json 
-       body: '{"issues":[{"id":"patch-advisory:RHSA-2024:4779","systems":["03f02020-55aa-49f4-993e-0ce6a1393805"]}]}'
+       body: '{"issues":[{"id":"patch-advisory:RHSA-2024:4779","systems":["b153ac0a-2ae5-4aa4-82d1-07416e4cc5cd"]}]}'
        return_content: true
        force_basic_auth: true
        url_username: "{{ insights_username }}"
