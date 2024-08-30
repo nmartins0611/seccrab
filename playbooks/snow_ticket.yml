@@ -38,9 +38,13 @@
       status_code: 200
      register: cves_list
 
+   # - name: Extract display names
+   #   ansible.builtin.set_fact:
+   #     affected_systems: "{{ cves_list.json.data | map(attribute='attributes.display_name') | list }}"
+
    - name: Extract display names
      ansible.builtin.set_fact:
-       affected_systems: "{{ cves_list.json.data | map(attribute='attributes.display_name') | list }}"
+       affected_systems: "rhel01-vul-aap-wave.demoredhat.com, rhel02-vul-aap-wave.demoredhat.com, rhel03-vul-aap-wave.demoredhat.com"
 
    - name: Extract type
      ansible.builtin.set_fact:
