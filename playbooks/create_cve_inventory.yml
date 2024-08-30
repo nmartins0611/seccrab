@@ -57,9 +57,20 @@
         controller_username: "{{ controller_username }}"
         controller_password: "{{ controller_password }}"
 
+     # - name: Add hosts to Dev inventory
+     #   ansible.controller.host:
+     #    name: "{{ item }}"
+     #    inventory: "Affected DEV {{ advisory_id }} Hosts"
+     #    state: present
+     #    controller_host: "{{ controller_host }}"
+     #    controller_username: "{{ controller_username }}"
+     #    controller_password: "{{ controller_password }}"
+     #   loop: "{{ display_dev }}"
+     #   when: display_dev | length > 0
+
      - name: Add hosts to Dev inventory
        ansible.controller.host:
-        name: "{{ item }}"
+        name: "rhel01-vul-aap-wave.demoredhat.com"
         inventory: "Affected DEV {{ advisory_id }} Hosts"
         state: present
         controller_host: "{{ controller_host }}"
@@ -77,9 +88,20 @@
         controller_username: "{{ controller_username }}"
         controller_password: "{{ controller_password }}"
 
+     # - name: Add hosts to Prod inventory
+     #   ansible.controller.host:
+     #    name: "{{ item }}"
+     #    inventory: "Affected PROD {{ advisory_id }} Hosts"
+     #    state: present
+     #    controller_host: "{{ controller_host }}"
+     #    controller_username: "{{ controller_username }}"
+     #    controller_password: "{{ controller_password }}"
+     #   loop: "{{ display_prod }}"
+     #   when: display_prod | length > 0
+
      - name: Add hosts to Prod inventory
        ansible.controller.host:
-        name: "{{ item }}"
+        name: "rhel02-vul-aap-wave.demoredhat.com"
         inventory: "Affected PROD {{ advisory_id }} Hosts"
         state: present
         controller_host: "{{ controller_host }}"
@@ -87,6 +109,18 @@
         controller_password: "{{ controller_password }}"
        loop: "{{ display_prod }}"
        when: display_prod | length > 0
+
+     - name: Add hosts to Prod inventory
+       ansible.controller.host:
+        name: "rhel03-vul-aap-wave.demoredhat.com"
+        inventory: "Affected PROD {{ advisory_id }} Hosts"
+        state: present
+        controller_host: "{{ controller_host }}"
+        controller_username: "{{ controller_username }}"
+        controller_password: "{{ controller_password }}"
+       loop: "{{ display_prod }}"
+       when: display_prod | length > 0
+
 
 
 # ---
