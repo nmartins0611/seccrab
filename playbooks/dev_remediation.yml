@@ -81,7 +81,7 @@
         Connection: "keep-alive"
       # body_format: json 
      #  body: '{"name":"CVE DEV RHSA-20244779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["03f02020-55aa-49f4-993e-0ce6a1393805"]}],"systems":[]},"auto_reboot":false}'
-       body: '{"name":"CVE DEV RHSA-20244779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["b153ac0a-2ae5-4aa4-82d1-07416e4cc5cd"]}],"systems":[]},"auto_reboot":false}'
+       body: '{"name":"CVE DEV RHSA-20244779","add":{"issues":[{"id":"patch-advisory:RHSA-2024:4779","resolution":"fix","systems":["b8f5f66c-62e9-45bb-bff6-b83a255e869f"]}],"systems":[]},"auto_reboot":false}'
        return_content: true
        force_basic_auth: true
        url_username: "{{ insights_username }}"
@@ -100,7 +100,7 @@
         accept: "application/json"
         Connection: "keep-alive"
       # body_format: json 
-       body: '{"issues":[{"id":"patch-advisory:RHSA-2024:4779","systems":["b153ac0a-2ae5-4aa4-82d1-07416e4cc5cd"]}]}'
+       body: '{"issues":[{"id":"patch-advisory:RHSA-2024:4779","systems":["b8f5f66c-62e9-45bb-bff6-b83a255e869f"]}]}'
        return_content: true
        force_basic_auth: true
        url_username: "{{ insights_username }}"
